@@ -1,0 +1,93 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-10-12 16:10:25.905315",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "marketplace",
+  "document_type",
+  "report_file",
+  "import_status",
+  "processing_summary",
+  "validation_errors",
+  "preview_data"
+ ],
+ "fields": [
+  {
+   "fieldname": "marketplace",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Marketplace",
+   "options": "Amazon\nFlipkart",
+   "reqd": 1
+  },
+  {
+   "fieldname": "document_type",
+   "fieldtype": "Select",
+   "label": "Document Type",
+   "options": "Purchase Order\nShipment\nInvoice\nReturn\nPayment Entry",
+   "reqd": 1
+  },
+  {
+   "fieldname": "report_file",
+   "fieldtype": "Attach",
+   "label": "Report File",
+   "reqd": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "import_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Import Status",
+   "options": "Pending\nProcessing\nValidated\nCompleted\nFailed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "processing_summary",
+   "fieldtype": "Long Text",
+   "label": "Processing Summary",
+   "read_only": 1
+  },
+  {
+   "fieldname": "validation_errors",
+   "fieldtype": "Long Text",
+   "label": "Validation Errors",
+   "read_only": 1
+  },
+  {
+   "fieldname": "preview_data",
+   "fieldtype": "Long Text",
+   "label": "Imported Data Preview",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-11-10 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Izi",
+ "name": "Vendor Report Import",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
