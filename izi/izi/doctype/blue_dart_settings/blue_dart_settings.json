@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "creation": "2026-11-18 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled", "environment", "base_url", "client_id", "client_secret", "login_id", "licence_key",
+  "api_type", "area_code", "customer_code", "label_size", "timeout_seconds",
+  "shipper_section", "shipper_name", "shipper_address1", "shipper_address2", "shipper_address3",
+  "shipper_pincode", "shipper_mobile", "shipper_email",
+  "shipping_defaults_section", "default_product_code", "default_sub_product_code", "default_pickup_time", "default_commodity"
+ ],
+ "fields": [
+  {"fieldname": "enabled", "fieldtype": "Check", "label": "Enabled", "description": "Turn on only after 'Test connection' succeeds."},
+  {"fieldname": "environment", "fieldtype": "Select", "label": "Environment", "options": "Sandbox\nProduction", "description": "Record which endpoint you are using. Sandbox URL is not yet confirmed by Blue Dart."},
+  {"fieldname": "base_url", "fieldtype": "Data", "label": "Base URL", "default": "https://apigateway.bluedart.com/in/transportation", "reqd": 1},
+  {"fieldname": "client_id", "fieldtype": "Data", "label": "Client ID (APIGEE)"},
+  {"fieldname": "client_secret", "fieldtype": "Password", "label": "Client Secret (APIGEE)"},
+  {"fieldname": "login_id", "fieldtype": "Data", "label": "LoginID"},
+  {"fieldname": "licence_key", "fieldtype": "Password", "label": "Licence Key"},
+  {"fieldname": "api_type", "fieldtype": "Data", "label": "API Type", "default": "S", "description": "Sample waybill uses S. The pincode sample uses T. Confirm with Blue Dart."},
+  {"fieldname": "area_code", "fieldtype": "Data", "label": "Origin Area Code", "description": "For example BHO."},
+  {"fieldname": "customer_code", "fieldtype": "Data", "label": "Customer Code"},
+  {"fieldname": "label_size", "fieldtype": "Select", "label": "Label Size", "options": "0\n1\n2\n3\n4", "default": "0", "description": "0 = A4 single label. 2 = 55x30, 3 = 89x60, 4 = 4x6 (international)."},
+  {"fieldname": "timeout_seconds", "fieldtype": "Int", "label": "Timeout (seconds)", "default": "60", "description": "Keep above 55 so Blue Dart's 504 response is received."},
+  {"fieldname": "shipper_section", "fieldtype": "Section Break", "label": "Shipper (IZI pickup address)"},
+  {"fieldname": "shipper_name", "fieldtype": "Data", "label": "Shipper Name"},
+  {"fieldname": "shipper_address1", "fieldtype": "Data", "label": "Address Line 1"},
+  {"fieldname": "shipper_address2", "fieldtype": "Data", "label": "Address Line 2"},
+  {"fieldname": "shipper_address3", "fieldtype": "Data", "label": "Address Line 3"},
+  {"fieldname": "shipper_pincode", "fieldtype": "Data", "label": "Pincode"},
+  {"fieldname": "shipper_mobile", "fieldtype": "Data", "label": "Mobile"},
+  {"fieldname": "shipper_email", "fieldtype": "Data", "label": "Email"},
+  {"fieldname": "shipping_defaults_section", "fieldtype": "Section Break", "label": "Shipping Defaults"},
+  {"fieldname": "default_product_code", "fieldtype": "Select", "label": "Product Code", "options": "A\nE\nD", "default": "E", "description": "A = Air/Apex, E = Ground, D = Domestic Priority."},
+  {"fieldname": "default_sub_product_code", "fieldtype": "Select", "label": "Sub Product", "options": "\nP\nC", "default": "P", "description": "P = prepaid. C (COD) is not enabled yet."},
+  {"fieldname": "default_pickup_time", "fieldtype": "Data", "label": "Pickup Time (HHMM)", "default": "1700"},
+  {"fieldname": "default_commodity", "fieldtype": "Data", "label": "Commodity Description", "description": "Letters and digits, up to 30 characters. Confirm the wording with Blue Dart."}
+ ],
+ "issingle": 1,
+ "modified": "2026-11-18 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Izi",
+ "name": "Blue Dart Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {"create": 1, "delete": 0, "email": 0, "print": 0, "read": 1, "report": 0, "role": "System Manager", "share": 0, "write": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

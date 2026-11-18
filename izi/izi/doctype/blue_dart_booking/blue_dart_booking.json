@@ -1,0 +1,30 @@
+{
+ "actions": [],
+ "autoname": "field:shipment",
+ "creation": "2026-11-18 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": ["shipment", "delivery_note", "status", "awb", "reference", "attempts", "label", "booked_at", "message"],
+ "fields": [
+  {"fieldname": "shipment", "fieldtype": "Link", "label": "Shipment", "options": "Shipment", "reqd": 1, "read_only": 1, "in_list_view": 1},
+  {"fieldname": "delivery_note", "fieldtype": "Link", "label": "Delivery Note", "options": "Delivery Note", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Not Booked\nBooking Pending\nBooked\nBooking Unknown\nCancelled", "default": "Not Booked", "read_only": 1, "in_list_view": 1, "in_standard_filter": 1},
+  {"fieldname": "awb", "fieldtype": "Data", "label": "AWB", "read_only": 1, "in_list_view": 1},
+  {"fieldname": "reference", "fieldtype": "Data", "label": "Reference", "read_only": 1},
+  {"fieldname": "attempts", "fieldtype": "Int", "label": "Booking Attempts", "default": "0", "read_only": 1},
+  {"fieldname": "label", "fieldtype": "Attach", "label": "Label", "read_only": 1},
+  {"fieldname": "booked_at", "fieldtype": "Datetime", "label": "Booked At", "read_only": 1},
+  {"fieldname": "message", "fieldtype": "Small Text", "label": "Message", "read_only": 1}
+ ],
+ "modified": "2026-11-18 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Izi",
+ "name": "Blue Dart Booking",
+ "owner": "Administrator",
+ "permissions": [
+  {"create": 1, "delete": 1, "email": 0, "print": 0, "read": 1, "report": 1, "role": "System Manager", "share": 0, "write": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

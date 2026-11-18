@@ -1,0 +1,40 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-11-18 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "courier",
+  "operation",
+  "reference",
+  "outcome",
+  "http_status",
+  "duration_ms",
+  "url",
+  "request_payload",
+  "response_payload"
+ ],
+ "fields": [
+  {"fieldname": "courier", "fieldtype": "Data", "label": "Courier", "in_list_view": 1, "in_standard_filter": 1, "read_only": 1},
+  {"fieldname": "operation", "fieldtype": "Data", "label": "Operation", "in_list_view": 1, "in_standard_filter": 1, "read_only": 1},
+  {"fieldname": "reference", "fieldtype": "Data", "label": "Reference", "in_list_view": 1, "in_standard_filter": 1, "read_only": 1},
+  {"fieldname": "outcome", "fieldtype": "Select", "label": "Outcome", "in_list_view": 1, "in_standard_filter": 1, "read_only": 1, "options": "Success\nBusiness Error\nTechnical Error\nTimeout\nAuth Error\nUnknown"},
+  {"fieldname": "http_status", "fieldtype": "Int", "label": "HTTP Status", "read_only": 1},
+  {"fieldname": "duration_ms", "fieldtype": "Int", "label": "Duration (ms)", "read_only": 1},
+  {"fieldname": "url", "fieldtype": "Data", "label": "URL", "read_only": 1},
+  {"fieldname": "request_payload", "fieldtype": "Long Text", "label": "Request (redacted)", "read_only": 1},
+  {"fieldname": "response_payload", "fieldtype": "Long Text", "label": "Response (redacted)", "read_only": 1}
+ ],
+ "modified": "2026-11-18 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Izi",
+ "name": "Courier API Log",
+ "owner": "Administrator",
+ "permissions": [
+  {"create": 0, "delete": 0, "email": 0, "export": 1, "print": 0, "read": 1, "report": 1, "role": "System Manager", "share": 0, "write": 0}
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

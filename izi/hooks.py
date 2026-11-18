@@ -5,6 +5,10 @@ app_description = "Amazon Vendor Central and Flipkart Vendor Hub integration for
 app_email = "design@indibasolutions.com"
 app_license = "mit"
 
+doctype_js = {
+    "Delivery Note": "public/js/bluedart_delivery_note.js",
+    "Shipment": "public/js/bluedart_shipment.js",
+}
 # Apps
 # ------------------
 
