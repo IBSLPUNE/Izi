@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Request bodies for Blue Dart. Shapes follow Blue Dart's published working samples (flat waybill body)."""
+"""Request bodies for Blue Dart. The waybill body sits under a "Request" key, as in the TSD and the cancel sample."""
 
 from datetime import datetime, timedelta, timezone
 
@@ -16,7 +16,7 @@ def pickup_date_token(pickup_at, pickup_time):
 def build_waybill_payload(s, cfg):
     c, sh = s.consignee, s.shipper
     cod = s.sub_product_code == "C"
-    return {
+    request = {
         "Consignee": {
             "ConsigneeAddress1": c.address1,
             "ConsigneeAddress2": c.address2,
@@ -73,6 +73,9 @@ def build_waybill_payload(s, cfg):
             "Sender": sh.name,
             "VendorCode": "",
         },
+    }
+    return {
+        "Request": request,
         "Profile": {
             "Api_type": cfg.api_type,
             "Area": cfg.area_code,

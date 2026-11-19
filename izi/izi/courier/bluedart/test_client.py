@@ -148,15 +148,17 @@ class GenerateWaybillTests(unittest.TestCase):
         client, t = make_client([login_ok(), awb_ok()])
         client.generate_waybill(make_shipment())
         body = t.calls[1]["body"]
-        self.assertEqual(set(body), {"Consignee", "Returnadds", "Services", "Shipper", "Profile"})
+        self.assertEqual(set(body), {"Request", "Profile"})
         self.assertEqual(body["Profile"], {"Api_type": "S", "Area": "BHO", "LicenceKey": "LICKEY-TEST", "LoginID": "LOGIN-TEST"})
-        svc = body["Services"]
+        req = body["Request"]
+        self.assertEqual(set(req), {"Consignee", "Returnadds", "Services", "Shipper"})
+        svc = req["Services"]
         self.assertEqual(svc["DeclaredValue"], "1000.00")
         self.assertFalse(svc["PDFOutputNotRequired"])
         self.assertTrue(svc["PickupDate"].startswith("/Date(") and svc["PickupDate"].endswith(")/"))
         self.assertEqual(svc["Dimensions"], [{"Breadth": "12", "Count": "1", "Height": "13", "Length": "14"}])
-        self.assertEqual(body["Shipper"]["CustomerCode"], "123456")
-        self.assertEqual(body["Shipper"]["OriginArea"], "BHO")
+        self.assertEqual(req["Shipper"]["CustomerCode"], "123456")
+        self.assertEqual(req["Shipper"]["OriginArea"], "BHO")
 
     def test_token_is_reused_until_refresh_window(self):
         client, t = make_client([login_ok(), awb_ok("80189941381"), awb_ok("80189941382")])
