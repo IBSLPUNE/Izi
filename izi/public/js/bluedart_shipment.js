@@ -31,12 +31,15 @@ function show_blue_dart(frm, booking) {
     }
 
     if (status === 'Not Booked') {
-        frm.add_custom_button(__('Book Waybill'), () => {
+        frm.add_custom_button(__('Book Waybill'), () => open_booking_dialog(booking, (options) => {
             frappe.confirm(
-                __('Book a Blue Dart waybill for this shipment? This creates a real shipment.'),
-                () => run('book_shipment', { shipment: frm.doc.name }, __('Booking with Blue Dart...'))
+                __('Book a {0} Blue Dart waybill for this shipment? This creates a real shipment.', [options.payment_mode]),
+                () => run('book_shipment', {
+                    shipment: frm.doc.name,
+                    options: JSON.stringify(options),
+                }, __('Booking with Blue Dart...'))
             );
-        }, group);
+        }), group);
     }
 
     if (status === 'Booked') {
@@ -76,6 +79,56 @@ function show_blue_dart(frm, booking) {
             );
         }, group);
     }
+}
+
+function open_booking_dialog(booking, on_submit) {
+    const o = booking.options || {};
+    frappe.prompt(
+        [
+            {
+                fieldname: 'payment_mode',
+                label: __('Payment Mode'),
+                fieldtype: 'Select',
+                options: 'Prepaid\nCOD',
+                default: o.payment_mode || 'Prepaid',
+                reqd: 1,
+            },
+            {
+                fieldname: 'product_code',
+                label: __('Product (A = Air, E = Ground, D = Domestic Priority)'),
+                fieldtype: 'Select',
+                options: 'A\nE\nD',
+                default: o.product_code || 'E',
+                reqd: 1,
+                description: __('COD is available for Air (A) and Ground (E) only.'),
+            },
+            {
+                fieldname: 'pickup_time',
+                label: __('Pickup Time (HHMM)'),
+                fieldtype: 'Data',
+                default: o.pickup_time || '1700',
+                reqd: 1,
+            },
+            {
+                fieldname: 'commodity',
+                label: __('Commodity Description'),
+                fieldtype: 'Data',
+                default: o.commodity || '',
+                reqd: 1,
+            },
+            {
+                fieldname: 'collectable_amount',
+                label: __('Amount to Collect on Delivery (COD)'),
+                fieldtype: 'Currency',
+                default: o.collectable_amount || booking.amount || 0,
+                depends_on: "eval:doc.payment_mode=='COD'",
+                mandatory_depends_on: "eval:doc.payment_mode=='COD'",
+            },
+        ],
+        on_submit,
+        __('Blue Dart booking'),
+        __('Continue')
+    );
 }
 
 function invoice_pdf_url(invoice_name) {
