@@ -49,7 +49,17 @@ function show_blue_dart(frm, booking) {
     }
 
     if (booking.label) {
-        frm.add_custom_button(__('Open Label'), () => window.open(booking.label), group);
+        frm.add_custom_button(__('Download Label'), () => window.open(booking.label), group);
+    }
+
+    if (booking.invoice) {
+        frm.add_custom_button(__('Download Invoice'), () => window.open(invoice_pdf_url(booking.invoice)), group);
+    } else if (status === 'Booked') {
+        frm.dashboard.add_comment(
+            __('No submitted Sales Invoice is linked to this Delivery Note yet. Create the invoice, then reload this page.'),
+            'blue',
+            true
+        );
     }
 
     if ((status === 'Booking Pending' || status === 'Booking Unknown') && frappe.user_roles.includes('System Manager')) {
@@ -66,4 +76,11 @@ function show_blue_dart(frm, booking) {
             );
         }, group);
     }
+}
+
+function invoice_pdf_url(invoice_name) {
+    return '/api/method/frappe.utils.print_format.download_pdf'
+        + '?doctype=' + encodeURIComponent('Sales Invoice')
+        + '&name=' + encodeURIComponent(invoice_name)
+        + '&format=Standard&no_letterhead=0';
 }

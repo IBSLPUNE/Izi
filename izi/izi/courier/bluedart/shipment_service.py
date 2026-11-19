@@ -27,15 +27,18 @@ SHIPMENT_DN_FIELD = "shipment_delivery_note"   # table field on Shipment
 SHIPMENT_DN_DOCTYPE = "Shipment Delivery Note"  # its child DocType
 SHIPMENT_PARCEL_FIELD = "shipment_parcel"
 
-
 @frappe.whitelist()
 def get_booking(shipment):
-    """Used by the Shipment form to decide which Blue Dart buttons to show."""
+    """Used by the Shipment form to decide which Blue Dart buttons and downloads to show."""
     frappe.get_doc("Shipment", shipment).check_permission("read")
     b = _booking(shipment)
-    if not b:
-        return {"status": NOT_BOOKED, "awb": "", "label": "", "message": ""}
-    return {"status": b.status or NOT_BOOKED, "awb": b.awb or "", "label": b.label or "", "message": b.message or ""}
+    return {
+        "status": (b.status if b else None) or NOT_BOOKED,
+        "awb": (b.awb if b else "") or "",
+        "label": (b.label if b else "") or "",
+        "message": (b.message if b else "") or "",
+        "invoice": _invoice_for_shipment(shipment),
+    }
 
 
 @frappe.whitelist()
@@ -313,3 +316,21 @@ def _time_from_hhmm(hhmm):
 def _description(dn):
     names = [it.item_name or it.item_code for it in dn.items]
     return ", ".join(dict.fromkeys(names))[:140]
+
+def _invoice_for_shipment(shipment_name):
+    """The submitted Sales Invoice raised against this shipment's Delivery Note, or an empty string."""
+    dn_names = frappe.get_all(
+        SHIPMENT_DN_DOCTYPE,
+        filters={"parent": shipment_name, "parenttype": "Shipment"},
+        pluck="delivery_note",
+    )
+    for dn_name in dn_names:
+        invoices = frappe.get_all(
+            "Sales Invoice Item",
+            filters={"delivery_note": dn_name, "docstatus": 1},
+            pluck="parent",
+            limit=1,
+        )
+        if invoices:
+            return invoices[0]
+    return ""
