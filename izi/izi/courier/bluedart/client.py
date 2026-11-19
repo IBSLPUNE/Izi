@@ -158,7 +158,7 @@ class BlueDartClient:
                     raise CourierTechnicalError("Blue Dart did not answer in time. Retry later.")
                 raise CourierOutcomeUnknown(UNKNOWN_OUTCOME_MESSAGE.format(ref=reference or "(none)"))
 
-            data = _json_or_none(resp.text)
+            data = _unwrap(_json_or_none(resp.text))
 
             if resp.status == 401:
                 self._emit(operation, reference, url, body, resp.status, resp.text, "Auth Error", started)
@@ -254,8 +254,8 @@ def redact(obj):
             lowered = str(key).lower()
             if lowered in SECRET_KEYS:
                 out[key] = "***"
-            elif lowered in BINARY_KEYS and isinstance(value, str):
-                out[key] = f"<{len(value)} chars of base64 omitted>"
+            elif lowered in BINARY_KEYS and isinstance(value, (str, list)):
+                out[key] = f"<{len(value)} items of label data omitted>"
             else:
                 out[key] = redact(value)
         return out
@@ -300,3 +300,19 @@ def _decode_binary(value):
         except (TypeError, ValueError):
             return None
     return None
+
+RESULT_WRAPPERS = ("GenerateWayBillResult", "CancelWaybillResult", "ImportDataResult", "error-response")
+
+
+def _unwrap(data):
+    """Blue Dart nests results: {"GenerateWayBillResult": {...}} or {"error-response": [{...}]}."""
+    if not isinstance(data, dict):
+        return data
+    for key in RESULT_WRAPPERS:
+        if key in data:
+            inner = data[key]
+            if isinstance(inner, list) and inner and isinstance(inner[0], dict):
+                return inner[0]
+            if isinstance(inner, dict):
+                return inner
+    return data

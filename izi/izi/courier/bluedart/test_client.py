@@ -218,6 +218,35 @@ class GenerateWaybillTests(unittest.TestCase):
         with self.assertRaises(CourierOutcomeUnknown):
             client.generate_waybill(make_shipment())
 
+    def test_wrapped_success_response_is_read(self):
+        """Blue Dart returns the AWB inside GenerateWayBillResult, with the label as a byte array."""
+        wrapped = HttpResponse(200, json.dumps({
+            "GenerateWayBillResult": {
+                "AWBNo": "50942916404",
+                "IsError": False,
+                "Status": [{"StatusCode": "", "StatusInformation": ""}],
+                "AWBPrintContent": list(b"%PDF-1.7 label"),
+            }
+        }))
+        client, _ = make_client([login_ok(), wrapped])
+        result = client.generate_waybill(make_shipment(reference="WRAP0001"))
+        self.assertEqual(result.awb, "50942916404")
+        self.assertEqual(result.label_pdf, b"%PDF-1.7 label")
+
+    def test_wrapped_error_response_gives_the_real_message(self):
+        wrapped = HttpResponse(400, json.dumps({
+            "status": 400,
+            "title": "Bad Request",
+            "error-response": [{
+                "IsError": True,
+                "Status": [{"StatusCode": "NullObject", "StatusInformation": "WayBillGenerationRequest is Null"}],
+            }],
+        }))
+        client, _ = make_client([login_ok(), wrapped])
+        with self.assertRaises(CourierBusinessError) as cm:
+            client.generate_waybill(make_shipment(reference="WRAP0002"))
+        self.assertIn("WayBillGenerationRequest is Null", cm.exception.message)
+
     def test_invalid_input_never_reaches_the_network(self):
         client, t = make_client([])
         cases = [
@@ -304,6 +333,18 @@ class AuthTests(unittest.TestCase):
 
 
 class LoggingTests(unittest.TestCase):
+
+    def test_label_bytes_inside_wrapper_are_not_logged(self):
+        entries = []
+        wrapped = HttpResponse(200, json.dumps({
+            "GenerateWayBillResult": {"AWBNo": "50942916404", "IsError": False, "Status": [], "AWBPrintContent": list(range(200))}
+        }))
+        client, _ = make_client([login_ok(), wrapped], log=entries.append)
+        client.generate_waybill(make_shipment(reference="LOG0001"))
+        blob = json.dumps(entries)
+        self.assertNotIn("[37, 80", blob)
+        self.assertIn("label data omitted", blob)
+        
     def test_logs_contain_no_secrets_or_label_bytes(self):
         entries = []
         client, _ = make_client([login_ok(), awb_ok()], log=entries.append)
